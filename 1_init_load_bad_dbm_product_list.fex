@@ -1,0 +1,102 @@
+-*DM_JOB_TYPE=1 
+-*DM_USERID=PTH\srvadmin 
+-*DM_SERVER_RELEASE_GEN=R729999D_300889 
+ 
+-*[WARNING] This flow is incomplete: 
+-* -- Invalid selected column(s) 
+ 
+-*************************************************** 
+ 
+-:START_PRC 
+SET PANEL=9999 
+SET MORE=OFF 
+SET 2PARTNAME=ON 
+-RUN 
+ 
+-*[Variables to Control Request] 
+-SET &&CM__TARGET = 'dbm_product_list_all'; 
+-SET &&CM__AUTHOR = 'PTH\srvadmin'; 
+-SET &&CM__REQUEST = '&FOCFEXNAME.EVAL'; 
+-SET &&CM__RETURN = 0; 
+-SET &&CM__FOCCPU = &FOCCPU.EVAL; 
+-DEFAULT &DBMSERROR = 10000000 
+-DEFAULT &STARTAT = 0 
+-DEFAULT &STOPAT  = 1000000000 
+ 
+-TYPE  (ICM18122) Request - &FOCFEXNAME (Owner: PTH\srvadmin) submitted. 
+-GOTO :DEP_MAIN; 
+ 
+-:DEP_MAIN 
+-TYPE  (ICM18741) star_schema_abcdefg/dbm_product_list_all type MS SQL Server ODBC/AzureDB New target 
+ENGINE MSODBC SET BULKLOAD OFF 
+-TYPE  (ICM18743) Starting Load 
+ 
+SQL SET UPCASE=OFF; END 
+SQL 
+SELECT 
+   COUNTBY(1 )  AS PROD_KEY , 
+   T1.PRODUCT_NUMBERzzzzzzzzzzzzzzzzzzzzzzzzzzzz , 
+   PRODUCT_NUMBER , 
+   PRODUCT_NAME , 
+   PRODUCT__CATEGORY , 
+   PRODUCT_TYPE , 
+   SALE__PRICE , 
+   OUR__COST , 
+   EFFECTIVE_DATE , 
+   END_DATE , 
+   ACTIVE 
+FROM 
+   star_schema.dbm_product_list T1 
+; 
+ 
+TABLE 
+/*[display]star_schema_abcdefg/dbm_product_list_all*/  
+ON TABLE SET PAGE NOPAGE 
+ON TABLE SET HOLDATTRS CUBE 
+ON TABLE SET HOLDLIST NOFOCLIST 
+ON TABLE SET EMPTYREPORT ON 
+ON TABLE SET SHORTPATH SQL 
+ON TABLE HOLD AS  
+star_schema_abcdefg/dbm_product_list_all 
+ 
+ TABLENAME 'dbm_product_list_all' 
+ CONNECTION 'CON01' FORMAT MSODBC 
+END 
+-RUN 
+ 
+-TYPE  (ICM18744) Ending Load 
+-RUN 
+-SET &&CM__RETURN = IF &FOCERRNUM EQ 14104 THEN 0 ELSE &FOCERRNUM; 
+-IF (&&CM__RETURN NE 0) GOTO :ENDJOB; 
+ 
+-IF (&SQLAPT EQ 'APT') GOTO :SKIPHOLD; 
+ 
+-TYPE  (ICM18440) Request will process data via NON-Pass Through (NON-APT) 
+ 
+-:SKIPHOLD 
+ 
+-SET &&CM__RETURN = &FOCERRNUM; 
+ 
+-:ENDJOB 
+-TYPE  (ICM18040) Return Code = &&CM__RETURN 
+ 
+SQL SET UPCASE=ON; END 
+SQL MSODBC 
+COMMIT WORK; 
+END 
+-RUN 
+ 
+-TYPE  (ICM18076) Request: &FOCFEXNAME - finished processing 
+ 
+-SET &&CM__FOCCPU = &FOCCPU.EVAL - &&CM__FOCCPU; 
+-TYPE  (ICM18007) CPU Time : &&CM__FOCCPU 
+ 
+-*[Main Condition] 
+-*[Main End] 
+ 
+-*[Dependence] 
+-:ENDDEP 
+SET PANEL=0 
+SET MORE=ON 
+SET 2PARTNAME=OFF 
+-RUN 
