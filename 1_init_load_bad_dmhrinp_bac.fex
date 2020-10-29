@@ -1,5 +1,6 @@
 -*DM_JOB_TYPE=1 
--*DM_USERID=PTH\srvadmin 
+-*DM_USERID=IBI\ms11637 
+-*DM_CLIENT_RELEASE_GEN=R729999D_301097 
 -*DM_SERVER_RELEASE_GEN=R729999D_301097 
  
 -*[WARNING] This flow is incomplete: 
@@ -14,16 +15,16 @@ SET 2PARTNAME=ON
 -RUN 
  
 -*[Variables to Control Request] 
--SET &&CM__TARGET = 'dmhr_all'; 
--SET &&CM__AUTHOR = 'PTH\srvadmin'; 
+-SET &&CM__TARGET = 'dmhrinp_all'; 
+-SET &&CM__AUTHOR = 'IBI\ms11637'; 
 -SET &&CM__REQUEST = '&FOCFEXNAME.EVAL'; 
 -SET &&CM__RETURN = 0; 
 -SET &&CM__FOCCPU = &FOCCPU.EVAL; 
--TYPE  (ICM18122) Request - &FOCFEXNAME (Owner: PTH\srvadmin) submitted. 
+-TYPE  (ICM18122) Request - &FOCFEXNAME (Owner: IBI\ms11637) submitted. 
 -GOTO :DEP_MAIN; 
  
 -:DEP_MAIN 
--TYPE  (ICM18741) star_schema_abcdefg/dmhr_all type MS SQL Server ODBC/AzureDB New target 
+-TYPE  (ICM18741) star_schema_abcdefg/dmhrinp_all type MS SQL Server ODBC/AzureDB New target 
 ENGINE MSODBC SET BULKLOAD OFF 
 -TYPE  (ICM18743) Starting Load 
  
@@ -32,34 +33,13 @@ SQL
 SELECT 
    COUNTBY(1 )  AS PROD_KEY , 
    T1.PRODUCT_NUMBERzzzzzzzzzzzzzzzzzzzzzzzzzzzz , 
-   T1.ID_NUM , --Employee Identification Number 
+   T1.ID , --Employee Identification Number 
+   T1.SCALE , --Pay Level 
    T1.LNAME , --Employee Last Name 
-   T1.FNAME , --Employee First Name 
-   T1.PLANT , --Location code of the manufacturing plant 
-   T1.START_DATE , --Date of employment 
-   T1.TERM_DATE , --Termination Date 
-   T1.STATUS , --Job Status 
-   T1."POSITION" , --Job Position 
-   T1.PAYSCALE , --Pay Level 
-   T1.POSITION_DESC , --Position Description 
-   T1.BYEAR , --Beginning Year 
-   T1.BQUARTER , --Beginning Quarter 
-   T1.BMONTH , --Beginning Month 
-   T1.EYEAR , --Ending Year 
-   T1.EQUARTER , --Ending Quarter 
-   T1.EMONTH , --Ending Month 
-   T1.RESIGN_COUNT , --Resigned Count 
-   T1.FIRE_COUNT , --Terminated Count 
-   T1.DECLINE_COUNT , --Declined Count 
-   T1.EMP_COUNT , --Employed Count 
-   T1.PEND_COUNT , --Pending Count 
-   T1.REJECT_COUNT , --Rejected Count 
-   T1.FULLNAME , --Full Name: Last, First 
-   T1.SALARY , --Salary 
- --Location of the manufacturing plant 
-   T1.PLANTLNG 
+ --Employee First Name 
+   T1.FNAME 
 FROM 
-   star_schema.dmhr T1 
+   star_schema.dmhrinp T1 
 ; 
  
 TABLE 
@@ -70,9 +50,9 @@ ON TABLE SET EMPTYREPORT ON
 ON TABLE SET SHORTPATH SQL 
 ON TABLE HOLD 
  NOKEYS AS  
-star_schema_abcdefg/dmhr_all 
+star_schema_abcdefg/dmhrinp_all 
  
- TABLENAME 'dmhr_all' 
+ TABLENAME 'dmhrinp_all' 
  CONNECTION 'CON01' FORMAT MSODBC 
 END 
 -RUN 

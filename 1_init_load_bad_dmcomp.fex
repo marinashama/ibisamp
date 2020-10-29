@@ -1,6 +1,6 @@
 -*DM_JOB_TYPE=1 
 -*DM_USERID=PTH\srvadmin 
--*DM_SERVER_RELEASE_GEN=R729999D_300889 
+-*DM_SERVER_RELEASE_GEN=R729999D_301097 
  
 -*[WARNING] This flow is incomplete: 
 -* -- Invalid selected column(s) 
@@ -19,10 +19,6 @@ SET 2PARTNAME=ON
 -SET &&CM__REQUEST = '&FOCFEXNAME.EVAL'; 
 -SET &&CM__RETURN = 0; 
 -SET &&CM__FOCCPU = &FOCCPU.EVAL; 
--DEFAULT &DBMSERROR = 10000000 
--DEFAULT &STARTAT = 0 
--DEFAULT &STOPAT  = 1000000000 
- 
 -TYPE  (ICM18122) Request - &FOCFEXNAME (Owner: PTH\srvadmin) submitted. 
 -GOTO :DEP_MAIN; 
  
@@ -36,22 +32,23 @@ SQL
 SELECT 
    COUNTBY(1 )  AS PROD_KEY , 
    T1.PRODUCT_NUMBERzzzzzzzzzzzzzzzzzzzzzzzzzzzz , 
-   STORE_CODE , --Store ID 
-   STORENAME , --Store Name 
-   STATE , --State 
-   REGION  --Region 
+   T1.STORE_CODE , --Store ID 
+   T1.STORENAME , --Store Name 
+   T1.STATE , --State 
+ --Region 
+   T1.REGION 
 FROM 
    star_schema.dmcomp T1 
 ; 
  
 TABLE 
-/*[display]star_schema_abcdefg/dmcomp_all*/  
 ON TABLE SET PAGE NOPAGE 
 ON TABLE SET HOLDATTRS CUBE 
 ON TABLE SET HOLDLIST NOFOCLIST 
 ON TABLE SET EMPTYREPORT ON 
 ON TABLE SET SHORTPATH SQL 
-ON TABLE HOLD AS  
+ON TABLE HOLD 
+ NOKEYS AS  
 star_schema_abcdefg/dmcomp_all 
  
  TABLENAME 'dmcomp_all' 
@@ -70,7 +67,6 @@ END
  
 -:SKIPHOLD 
  
--SET &&CM__RETURN = &FOCERRNUM; 
  
 -:ENDJOB 
 -TYPE  (ICM18040) Return Code = &&CM__RETURN 

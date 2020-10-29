@@ -1,10 +1,11 @@
 -*DM_JOB_TYPE=1 
--*DM_USERID=PTH\srvadmin 
--*DM_SERVER_RELEASE_GEN=R729999D_300889 
+-*DM_USERID=IBI\ms11637 
+-*DM_CLIENT_RELEASE_GEN=R729999D_301097 
+-*DM_SERVER_RELEASE_GEN=R729999D_301097 
  
 -*[WARNING] This flow is incomplete: 
 -* -- Invalid selected column(s) 
--*****  marina test commit 1 
+ 
 -*************************************************** 
  
 -:START_PRC 
@@ -15,15 +16,11 @@ SET 2PARTNAME=ON
  
 -*[Variables to Control Request] 
 -SET &&CM__TARGET = 'dbm_prod_list_sql_all'; 
--SET &&CM__AUTHOR = 'PTH\srvadmin'; 
+-SET &&CM__AUTHOR = 'IBI\ms11637'; 
 -SET &&CM__REQUEST = '&FOCFEXNAME.EVAL'; 
 -SET &&CM__RETURN = 0; 
 -SET &&CM__FOCCPU = &FOCCPU.EVAL; 
--DEFAULT &DBMSERROR = 10000000 
--DEFAULT &STARTAT = 0 
--DEFAULT &STOPAT  = 1000000000 
- 
--TYPE  (ICM18122) Request - &FOCFEXNAME (Owner: PTH\srvadmin) submitted. 
+-TYPE  (ICM18122) Request - &FOCFEXNAME (Owner: IBI\ms11637) submitted. 
 -GOTO :DEP_MAIN; 
  
 -:DEP_MAIN 
@@ -36,28 +33,28 @@ SQL
 SELECT 
    COUNTBY(1 )  AS PROD_KEY , 
    T1.PRODUCT_NUMBERzzzzzzzzzzzzzzzzzzzzzzzzzzzz , 
-   PROD_KEY , 
-   PRODUCT_NUMBER , 
-   PRODUCT_NAME , 
-   PRODUCT__CATEGORY , 
-   PRODUCT_TYPE , 
-   SALE__PRICE , 
-   OUR__COST , 
-   EFFECTIVE_DATE , 
-   END_DATE , 
-   ACTIVE 
+   T1.PROD_KEY , 
+   T1.PRODUCT_NUMBER , 
+   T1.PRODUCT_NAME , 
+   T1.PRODUCT__CATEGORY , 
+   T1.PRODUCT_TYPE , 
+   T1.SALE__PRICE , 
+   T1.OUR__COST , 
+   T1.EFFECTIVE_DATE , 
+   T1.END_DATE , 
+   T1.ACTIVE 
 FROM 
    star_schema.dbm_prod_list_sql T1 
 ; 
  
 TABLE 
-/*[display]star_schema_abcdefg/dbm_prod_list_sql_all*/  
 ON TABLE SET PAGE NOPAGE 
 ON TABLE SET HOLDATTRS CUBE 
 ON TABLE SET HOLDLIST NOFOCLIST 
 ON TABLE SET EMPTYREPORT ON 
 ON TABLE SET SHORTPATH SQL 
-ON TABLE HOLD AS  
+ON TABLE HOLD 
+ NOKEYS AS  
 star_schema_abcdefg/dbm_prod_list_sql_all 
  
  TABLENAME 'dbm_prod_list_sql_all' 
@@ -76,7 +73,6 @@ END
  
 -:SKIPHOLD 
  
--SET &&CM__RETURN = &FOCERRNUM; 
  
 -:ENDJOB 
 -TYPE  (ICM18040) Return Code = &&CM__RETURN 

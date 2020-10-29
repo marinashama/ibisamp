@@ -1,6 +1,6 @@
 -*DM_JOB_TYPE=1 
 -*DM_USERID=PTH\srvadmin 
--*DM_SERVER_RELEASE_GEN=R729999D_301097 
+-*DM_SERVER_RELEASE_GEN=R729999D_300889 
  
 -*[WARNING] This flow is incomplete: 
 -* -- Invalid selected column(s) 
@@ -19,6 +19,10 @@ SET 2PARTNAME=ON
 -SET &&CM__REQUEST = '&FOCFEXNAME.EVAL'; 
 -SET &&CM__RETURN = 0; 
 -SET &&CM__FOCCPU = &FOCCPU.EVAL; 
+-DEFAULT &DBMSERROR = 10000000 
+-DEFAULT &STARTAT = 0 
+-DEFAULT &STOPAT  = 1000000000 
+ 
 -TYPE  (ICM18122) Request - &FOCFEXNAME (Owner: PTH\srvadmin) submitted. 
 -GOTO :DEP_MAIN; 
  
@@ -32,44 +36,43 @@ SQL
 SELECT 
    COUNTBY(1 )  AS PROD_KEY , 
    T1.PRODUCT_NUMBERzzzzzzzzzzzzzzzzzzzzzzzzzzzz , 
-   T1.ID_NUM , --Employee Identification Number 
-   T1.LNAME , --Employee Last Name 
-   T1.FNAME , --Employee First Name 
-   T1.PLANT , --Location code of the manufacturing plant 
-   T1.START_DATE , --Date of employment 
-   T1.TERM_DATE , --Termination Date 
-   T1.STATUS , --Job Status 
-   T1."POSITION" , --Job Position 
-   T1.PAYSCALE , --Pay Level 
-   T1.POSITION_DESC , --Position Description 
-   T1.BYEAR , --Beginning Year 
-   T1.BQUARTER , --Beginning Quarter 
-   T1.BMONTH , --Beginning Month 
-   T1.EYEAR , --Ending Year 
-   T1.EQUARTER , --Ending Quarter 
-   T1.EMONTH , --Ending Month 
-   T1.RESIGN_COUNT , --Resigned Count 
-   T1.FIRE_COUNT , --Terminated Count 
-   T1.DECLINE_COUNT , --Declined Count 
-   T1.EMP_COUNT , --Employed Count 
-   T1.PEND_COUNT , --Pending Count 
-   T1.REJECT_COUNT , --Rejected Count 
-   T1.FULLNAME , --Full Name: Last, First 
-   T1.SALARY , --Salary 
- --Location of the manufacturing plant 
-   T1.PLANTLNG 
+   ID_NUM , --Employee Identification Number 
+   LNAME , --Employee Last Name 
+   FNAME , --Employee First Name 
+   PLANT , --Location code of the manufacturing plant 
+   START_DATE , --Date of employment 
+   TERM_DATE , --Termination Date 
+   STATUS , --Job Status 
+   "POSITION" , --Job Position 
+   PAYSCALE , --Pay Level 
+   POSITION_DESC , --Position Description 
+   BYEAR , --Beginning Year 
+   BQUARTER , --Beginning Quarter 
+   BMONTH , --Beginning Month 
+   EYEAR , --Ending Year 
+   EQUARTER , --Ending Quarter 
+   EMONTH , --Ending Month 
+   RESIGN_COUNT , --Resigned Count 
+   FIRE_COUNT , --Terminated Count 
+   DECLINE_COUNT , --Declined Count 
+   EMP_COUNT , --Employed Count 
+   PEND_COUNT , --Pending Count 
+   REJECT_COUNT , --Rejected Count 
+   FULLNAME , --Full Name: Last, First 
+   SALARY , --Salary 
+   PLANTLNG  --Location of the manufacturing plant 
 FROM 
    star_schema.dmhr T1 
 ; 
  
 TABLE 
+/*[display]star_schema_abcdefg/dmhr_all*/  
 ON TABLE SET PAGE NOPAGE 
 ON TABLE SET HOLDATTRS CUBE 
 ON TABLE SET HOLDLIST NOFOCLIST 
 ON TABLE SET EMPTYREPORT ON 
 ON TABLE SET SHORTPATH SQL 
-ON TABLE HOLD 
- NOKEYS AS  
+ON TABLE HOLD AS  
 star_schema_abcdefg/dmhr_all 
  
  TABLENAME 'dmhr_all' 
@@ -88,6 +91,7 @@ END
  
 -:SKIPHOLD 
  
+-SET &&CM__RETURN = &FOCERRNUM; 
  
 -:ENDJOB 
 -TYPE  (ICM18040) Return Code = &&CM__RETURN 

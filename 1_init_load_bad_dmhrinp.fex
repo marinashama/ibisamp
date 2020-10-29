@@ -1,6 +1,6 @@
 -*DM_JOB_TYPE=1 
--*DM_USERID=PTH\srvadmin 
--*DM_SERVER_RELEASE_GEN=R729999D_300889 
+-*DM_USERID=IBI\ms11637 
+-*DM_SERVER_RELEASE_GEN=R729999D_301097 
  
 -*[WARNING] This flow is incomplete: 
 -* -- Invalid selected column(s) 
@@ -15,15 +15,11 @@ SET 2PARTNAME=ON
  
 -*[Variables to Control Request] 
 -SET &&CM__TARGET = 'dmhrinp_all'; 
--SET &&CM__AUTHOR = 'PTH\srvadmin'; 
+-SET &&CM__AUTHOR = 'IBI\ms11637'; 
 -SET &&CM__REQUEST = '&FOCFEXNAME.EVAL'; 
 -SET &&CM__RETURN = 0; 
 -SET &&CM__FOCCPU = &FOCCPU.EVAL; 
--DEFAULT &DBMSERROR = 10000000 
--DEFAULT &STARTAT = 0 
--DEFAULT &STOPAT  = 1000000000 
- 
--TYPE  (ICM18122) Request - &FOCFEXNAME (Owner: PTH\srvadmin) submitted. 
+-TYPE  (ICM18122) Request - &FOCFEXNAME (Owner: IBI\ms11637) submitted. 
 -GOTO :DEP_MAIN; 
  
 -:DEP_MAIN 
@@ -36,22 +32,23 @@ SQL
 SELECT 
    COUNTBY(1 )  AS PROD_KEY , 
    T1.PRODUCT_NUMBERzzzzzzzzzzzzzzzzzzzzzzzzzzzz , 
-   ID , --Employee Identification Number 
-   SCALE , --Pay Level 
-   LNAME , --Employee Last Name 
-   FNAME  --Employee First Name 
+   T1.ID , --Employee Identification Number 
+   T1.SCALE , --Pay Level 
+   T1.LNAME , --Employee Last Name 
+ --Employee First Name 
+   T1.FNAME 
 FROM 
    star_schema.dmhrinp T1 
 ; 
  
 TABLE 
-/*[display]star_schema_abcdefg/dmhrinp_all*/  
 ON TABLE SET PAGE NOPAGE 
 ON TABLE SET HOLDATTRS CUBE 
 ON TABLE SET HOLDLIST NOFOCLIST 
 ON TABLE SET EMPTYREPORT ON 
 ON TABLE SET SHORTPATH SQL 
-ON TABLE HOLD AS  
+ON TABLE HOLD 
+ NOKEYS AS  
 star_schema_abcdefg/dmhrinp_all 
  
  TABLENAME 'dmhrinp_all' 
@@ -70,7 +67,6 @@ END
  
 -:SKIPHOLD 
  
--SET &&CM__RETURN = &FOCERRNUM; 
  
 -:ENDJOB 
 -TYPE  (ICM18040) Return Code = &&CM__RETURN 
